@@ -1,0 +1,20 @@
+<header class="bar">
+  <div class="bar-inner">
+    <a class="brand" routerLink="/">Account Utility</a>
+    <nav aria-label="Main">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        Process
+      </a>
+      @if (auth.isAdmin()) {
+        <a routerLink="/admin/users" routerLinkActive="active">Users</a>
+      }
+    </nav>
+    <div class="account">
+      <span class="name">{{ auth.user()?.name }}</span>
+      <button class="btn" type="button" (click)="signOut()">Sign out</button>
+    </div>
+  </div>
+</header>
+<main class="content">
+  <router-outlet />
+</main>

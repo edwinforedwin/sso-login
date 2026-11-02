@@ -1,0 +1,173 @@
+<header class="page-head">
+  <h1>Process accounts</h1>
+  <p class="subtitle">Upload account numbers and download the results as an Excel workbook.</p>
+</header>
+
+<section class="card intake" aria-labelledby="intake-title">
+  <h2 id="intake-title">New request</h2>
+
+  @if (selected(); as current) {
+    <div class="file-row">
+      <svg class="file-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6 2h8l5 5v15H6z M14 2v5h5 M9 12h7 M9 16h7" />
+      </svg>
+      <div class="file-meta">
+        <strong>{{ current.file.name }}</strong>
+        <small>{{ fileSize(current.file.size) }}</small>
+      </div>
+      <button class="btn" type="button" (click)="clearSelection()">Remove</button>
+    </div>
+
+    <dl class="tiles">
+      <div class="tile tile-primary">
+        <dt>Accounts to process</dt>
+        <dd>{{ current.parsed.accounts.length | number }}</dd>
+      </div>
+      <div class="tile" [class.tile-warning]="current.parsed.invalid.length">
+        <dt>Invalid lines</dt>
+        <dd>{{ current.parsed.invalid.length | number }}</dd>
+      </div>
+      <div class="tile">
+        <dt>Duplicates</dt>
+        <dd>{{ current.parsed.duplicates | number }}</dd>
+      </div>
+      <div class="tile">
+        <dt>Blank lines</dt>
+        <dd>{{ current.parsed.blankLines | number }}</dd>
+      </div>
+    </dl>
+
+    @if (current.parsed.invalid.length) {
+      <p class="notice notice-warning">
+        Invalid lines will be skipped. First one is line {{ current.parsed.invalid[0].line }}:
+        <code>{{ current.parsed.invalid[0].value }}</code>
+      </p>
+    }
+    @if (!current.parsed.accounts.length) {
+      <p class="notice notice-error" role="alert">This file has no valid account numbers to process.</p>
+    }
+    @if (submitError()) {
+      <p class="notice notice-error" role="alert">{{ submitError() }}</p>
+    }
+
+    <div class="actions">
+      <small>Duplicates and blank lines are skipped automatically.</small>
+      <button class="btn btn-primary" type="button" [disabled]="!canProcess()" (click)="process()">
+        {{ submitting() ? 'Submitting…' : 'Process' }}
+      </button>
+    </div>
+  } @else {
+    <div class="intake-grid">
+      <label
+        class="dropzone"
+        [class.dragging]="dragging()"
+        (dragover)="onDragOver($event)"
+        (dragleave)="dragging.set(false)"
+        (drop)="onDrop($event)"
+      >
+        <input class="file-input" type="file" accept=".txt,text/plain" (change)="onFileInput($event)" />
+        <svg class="upload-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 16V4 M7 9l5-5 5 5 M4 16v4h16v-4" />
+        </svg>
+        <strong>Drag your file here</strong>
+        <small>or</small>
+        <span class="btn">Choose file</span>
+      </label>
+
+      <div class="requirements">
+        <h3>File requirements</h3>
+        <ul>
+          <li>Plain text file (.txt)</li>
+          <li>One account number per line</li>
+          <li>Up to 10 MB</li>
+        </ul>
+        <h3>You will receive</h3>
+        <ul>
+          <li>An Excel workbook with 22 data points for each account</li>
+        </ul>
+      </div>
+    </div>
+
+    @if (fileError()) {
+      <p class="notice notice-error file-error" role="alert">{{ fileError() }}</p>
+    }
+  }
+</section>
+
+<section class="card jobs" aria-labelledby="jobs-title">
+  <div class="jobs-head">
+    <h2 id="jobs-title">Recent jobs</h2>
+    <small>Your last 10 jobs, newest first</small>
+  </div>
+
+  @if (listError()) {
+    <p class="notice notice-warning list-notice" role="alert">{{ listError() }}</p>
+  }
+  @if (downloadError()) {
+    <p class="notice notice-error list-notice" role="alert">{{ downloadError() }}</p>
+  }
+
+  @if (recentJobs().length) {
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">File</th>
+            <th scope="col" class="numeric">Accounts</th>
+            <th scope="col">Submitted</th>
+            <th scope="col">Status</th>
+            <th scope="col"><span class="sr-only">Actions</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (job of recentJobs(); track job.id) {
+            <tr>
+              <td class="file-cell">{{ job.fileName }}</td>
+              <td class="numeric">{{ job.totalAccounts | number }}</td>
+              <td class="date-cell">{{ job.createdAt | date: 'MMM d, h:mm a' }}</td>
+              <td class="status-cell">
+                @if (isActive(job)) {
+                  <div class="progress-label">
+                    <span>Processing</span>
+                    <span>{{ percent(job) }}%</span>
+                  </div>
+                  <div
+                    class="progress"
+                    role="progressbar"
+                    aria-label="Processing"
+                    [attr.aria-valuenow]="percent(job)"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                  >
+                    <div class="progress-fill" [style.width.%]="percent(job)"></div>
+                  </div>
+                } @else if (job.status === 'completed') {
+                  <span class="pill pill-good">Ready</span>
+                } @else {
+                  <span class="pill pill-bad">Failed</span>
+                  @if (job.errorMessage) {
+                    <small>{{ job.errorMessage }}</small>
+                  }
+                }
+              </td>
+              <td class="action-cell">
+                @if (job.status === 'completed') {
+                  <button
+                    class="btn"
+                    type="button"
+                    [disabled]="downloadingId() === job.id"
+                    (click)="download(job)"
+                  >
+                    {{ downloadingId() === job.id ? 'Preparing…' : 'Download Excel' }}
+                  </button>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else if (!loading() && !listError()) {
+    <p class="empty jobs-empty">No jobs yet. Files you process will appear here.</p>
+  }
+</section>
