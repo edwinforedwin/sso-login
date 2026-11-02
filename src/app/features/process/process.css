@@ -1,0 +1,283 @@
+.page-head {
+  margin-bottom: 20px;
+}
+
+.intake {
+  margin-bottom: 20px;
+  padding: 24px;
+}
+
+.intake h2 {
+  margin-bottom: 16px;
+}
+
+.intake-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 24px;
+}
+
+.dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 210px;
+  border: 1.5px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 24px 16px;
+  background: var(--bg);
+  text-align: center;
+  cursor: pointer;
+}
+
+.dropzone:hover,
+.dropzone.dragging,
+.dropzone:focus-within {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.dropzone small {
+  color: var(--muted);
+}
+
+.dropzone .btn {
+  margin-top: 6px;
+}
+
+svg {
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.upload-icon {
+  width: 32px;
+  height: 32px;
+  margin-bottom: 6px;
+  color: var(--accent);
+}
+
+.requirements h3 {
+  margin: 0 0 6px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.requirements ul {
+  margin: 0 0 18px;
+  padding-left: 18px;
+  color: var(--muted);
+}
+
+.requirements ul:last-child {
+  margin-bottom: 0;
+}
+
+.file-input,
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.file-error {
+  margin: 14px 0 0;
+}
+
+.file-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+}
+
+.file-icon {
+  width: 28px;
+  height: 28px;
+  color: var(--accent);
+}
+
+.file-meta {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.file-meta strong,
+.file-meta small {
+  display: block;
+}
+
+.file-meta strong {
+  font-weight: 500;
+}
+
+.file-meta small,
+.actions small,
+.jobs-head small {
+  color: var(--muted);
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 14px 0;
+}
+
+.tile {
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  background: var(--bg);
+}
+
+.tile dt {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.tile dd {
+  margin: 2px 0 0;
+  font-size: 24px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.tile-primary {
+  background: var(--accent-soft);
+}
+
+.tile-primary dd {
+  color: var(--accent);
+}
+
+.tile-warning {
+  background: var(--warning-soft);
+}
+
+.tile-warning dt,
+.tile-warning dd {
+  color: var(--warning);
+}
+
+code {
+  overflow-wrap: anywhere;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.jobs {
+  padding: 0;
+  overflow: hidden;
+}
+
+.jobs-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+  padding: 18px 24px 14px;
+}
+
+.list-notice {
+  margin: 0 24px 14px;
+}
+
+.jobs-empty {
+  padding: 4px 24px 22px;
+}
+
+th {
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+}
+
+th:first-child,
+td:first-child {
+  padding-left: 24px;
+}
+
+th:last-child,
+td:last-child {
+  padding-right: 24px;
+}
+
+.numeric {
+  padding-right: 28px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.file-cell {
+  min-width: 140px;
+  max-width: 280px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.date-cell {
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.status-cell {
+  min-width: 150px;
+}
+
+.status-cell small {
+  display: block;
+  color: var(--muted);
+}
+
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 3px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.progress {
+  overflow: hidden;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--accent-soft);
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.4s linear;
+}
+
+.action-cell {
+  text-align: right;
+}
+
+@media (max-width: 720px) {
+  .intake-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
